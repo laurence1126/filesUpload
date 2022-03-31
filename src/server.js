@@ -94,11 +94,11 @@ app.post('/uploadFiles',function(req, res){
     require('./uploadFiles').uploadFile(req, res, currentDirectory);
 })
 
-app.get('/changeDir', function(req, res){
+app.get('/loadDir', function(req, res){
     res.redirect('/');
 })
 
-app.post('/changeDir', urlencodedParser, function(req, res){
+app.post('/loadDir', urlencodedParser, function(req, res){
     var response = {
         "request_dir": req.body.requestDir,
     };
@@ -229,5 +229,5 @@ app.post('/download', urlencodedParser, function(req, res){
 var server = app.listen(80, function (){
     var host = server.address().address;
     var port = server.address().port;
-    console.log("Server started, listening on http://localhost:%s/ ...\n", port);
+    console.log("Server started, listening on " + "\x1B[33m" + "http://localhost:%s/ " + "\x1B[0m" + "...\n", port);
 })

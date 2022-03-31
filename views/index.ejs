@@ -43,7 +43,7 @@
 
     <%- currentDirectory %>
     <ul class="file-container" id="count-li"><%- filelist %></ul>
-    <form id="send-value" action="/changeDir" method="post">
+    <form id="send-value" action="/loadDir" method="post">
       <input type="text" id="requestDir" name="requestDir" hidden>
     </form>
     <form id="download" action="/download" method="post">
@@ -89,6 +89,7 @@
         $("#" + i + "th-file").click(function(){
           document.getElementById("requestDir").value = this.firstChild.lastChild.innerText;
           console.log(document.getElementById("requestDir").value);
+          $("#send-value").attr("action", "/loadDir?" + document.getElementById("requestDir").value);
           $("#send-value").submit();
         })
       }
@@ -96,24 +97,28 @@
       $("#prev-button").click(function(){
         document.getElementById("requestDir").value = "../";
         console.log(document.getElementById("requestDir").value);
+        $("#send-value").attr("action", "/loadDir?prev");
         $("#send-value").submit();
       })
 
       $("#refresh-button").click(function(){
         document.getElementById("requestDir").value = "./";
         console.log(document.getElementById("requestDir").value);
+        $("#send-value").attr("action", "/loadDir?refresh");
         $("#send-value").submit();
       })
 
       $("#home-button").click(function(){
         document.getElementById("requestDir").value = "home";
         console.log(document.getElementById("requestDir").value);
+        $("#send-value").attr("action", "/loadDir?home");
         $("#send-value").submit();
       })
 
       $("#forward-button").click(function(){
         document.getElementById("requestDir").value = "forward";
         console.log(document.getElementById("requestDir").value);
+        $("#send-value").attr("action", "/loadDir?forward");
         $("#send-value").submit();
       })
     </script>
