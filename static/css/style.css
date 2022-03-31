@@ -1,0 +1,28 @@
+.file-container {
+    max-width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none; 
+}
+
+.file-item {
+    width: 150px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.file-item img {
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+}
+
+.file-item p{
+    color: black;
+}

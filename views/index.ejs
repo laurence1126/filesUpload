@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Files Upload</title>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/jquery.dialog.js"></script>
+    <link href="css/dialog.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1 id="title"><%= title %></h1>
+    <div id="info"></div>
+
+    <button onclick="$('#uploadFiles').click()" class="btn btn-primary">Upload Files</button><br>
+    <form name="uploadFileForm" hidden>
+      <div>
+        Upload Files
+        <input id="uploadFiles" accept="*/*" type="file" webkitdirectory multiple>
+      </div>
+    </form>
+
+    <a href="#" onclick="$('#prev-button').click()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+    </svg></a>
+    <a href="#" onclick="$('#home-button').click()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" class="bi bi-house-fill" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+      <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+    </svg></a>
+    <a href="#" onclick="$('#refresh-button').click()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+    </svg></a>
+    <button id="prev-button" class="btn btn-primary" hidden>Prev</button>
+    <button id="home-button" class="btn btn-primary" hidden>Home</button>
+    <button id="refresh-button" class="btn btn-primary" hidden>Prev</button>
+
+    <%- currentDirectory %>
+    <ul class="file-container" id="count-li"><%- filelist %></ul>
+    <form id="send-value" action="/changeDir" method="post">
+      <input type="text" id="requestDir" name="requestDir" hidden>
+    </form>
+    <form id="download" action="/download" method="post">
+      <input type="text" id="requestDownload" name="requestDownload" hidden value=<%- downloadItem %>>
+    </form>
+
+    <%- content %>
+
+    <script>
+      uploadFiles.onchange = uploadFile;
+
+      function uploadFile() {
+        console.log("上传文件中");
+        console.log("this.files", this.files);
+        var formData = new FormData();
+        for (let i = 0; i < this.files.length; i++) {
+           // 将文件路径(包含文件名)作为formData的key, 避免key重复
+          let key = this.files[i].webkitRelativePath || "defaultUploadFileKey"; // 如果webkitRelativePath的值不为空说明上传的是文件夹
+          formData.append(key, this.files[i]);
+          console.log(key+"\n");
+        }
+        $.ajax({
+          url: "/uploadFiles",
+          type: "post",
+          async: false,
+          cache: false,
+          data: formData,
+          contentType: false, // 取消自动的设置请求头
+          processData: false, //取消自动格式化数据
+          enctype: "multipart/form-data",
+          success(data) {
+            $("#info").html(data);
+          },
+          error(err) {
+            console.log("err: ", err);
+          },
+        });
+      }
+
+      var temp = document.getElementById('count-li');
+      var count = temp.getElementsByTagName("li").length;
+      for (i=1; i<=count; i++){
+        $("#" + i + "th-file").click(function(){
+          document.getElementById("requestDir").value = this.firstChild.lastChild.innerText;
+          console.log(document.getElementById("requestDir").value);
+          $("#send-value").submit();
+        })
+      }
+
+      $("#prev-button").click(function(){
+        document.getElementById("requestDir").value = "../";
+        console.log(document.getElementById("requestDir").value);
+        $("#send-value").submit();
+      })
+
+      $("#refresh-button").click(function(){
+        document.getElementById("requestDir").value = "./";
+        console.log(document.getElementById("requestDir").value);
+        $("#send-value").submit();
+      })
+
+      $("#home-button").click(function(){
+        document.getElementById("requestDir").value = "home";
+        console.log(document.getElementById("requestDir").value);
+        $("#send-value").submit();
+      })
+    </script>
+  </body>
+</html>
+
