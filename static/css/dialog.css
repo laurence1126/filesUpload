@@ -235,15 +235,15 @@
     display: inline-block; }
   .dialog-confirm .dialog-submit {
     width: 98px;
-    height: 30px;
+    height: 35px;
     font-size: 12px;
-    line-height: 30px; }
+    line-height: 35px; }
   .dialog-confirm .dialog-cancel {
     box-sizing: content-box;
     width: 96px;
-    height: 30px;
+    height: 35px;
     font-size: 12px;
-    line-height: 30px; }
+    line-height: 35px; }
 
 .dialog-success-top {
   position: fixed;
